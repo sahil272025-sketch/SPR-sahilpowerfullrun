@@ -1,0 +1,29 @@
+name: Build SPR Game APK
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build Unity Project
+    runs-on: ubuntu-latest
+    steps:
+      # 1. Repository ko checkout karein
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # 2. Unity Project ko Android APK mein convert karein
+      - name: Unity Builder
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: Android
+
+      # 3. APK ko artifacts mein save karein taaki aap download kar saken
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: SPR-Game-Build
+          path: build/Android/Android.apk
